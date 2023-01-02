@@ -13,7 +13,7 @@
 
 import numpy as np
 
-def compute_probabilities(words_list):
+def compute_scores(words_list):
 	'''
 		Function that assings a word a score based on how probable it is that it's the answer
 		Will be used at the beginning suring initialization of the game (only computed once)
@@ -28,9 +28,19 @@ def compute_probabilities(words_list):
 		probabilities
 			an array with the score given to each word, in the order of the words appearing on the list
 	'''
-	probabilities = np.zeros(len(words_list))
+	scores = np.zeros(len(words_list))
 
-	return probabilities
+	frequencies = compute_letter_frequencies(words_list)
+
+	#for each word in the list, get the score by: summing over the total freqs of each letter in the word + the freq of the spot that it is in
+
+	for word_index,word in enumerate(words_list):
+		word_array = list(word)
+		for letter_index,letter in enumerate(word_array):
+			index = ord(letter) - 97
+			scores[word_index]+= (frequencies[index,0] + frequencies[index,letter_index+1])
+
+	return scores
 
 def compute_letter_frequencies(words_list):
 	'''
