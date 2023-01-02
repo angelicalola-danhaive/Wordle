@@ -61,4 +61,25 @@ def compare(guess,solution):
 	return response
 
 
+def sort(words_list,reponse):
+	'''
+		Sorting the list of words by:
+		 1. removing all options that don't match the response array of colors (i.e. don't have letters in the right place)
+		 2. sorting the remaining ones by probabilities
+
+				Parameters
+		----------
+		words_list
+			list of all of possible words so far
+		response
+			the reponse array of colors, result of the compare function
+
+		Returns
+		----------
+			returns nothing as it directly modifies the list
+	'''
+
+	return None
+
+
 	
