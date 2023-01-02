@@ -28,6 +28,7 @@ def compute_probabilities(words_list):
 		probabilities
 			an array with the score given to each word, in the order of the words appearing on the list
 	'''
+	probabilities = np.zeros(len(words_list))
 
 	return probabilities
 
