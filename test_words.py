@@ -11,6 +11,7 @@
     """
 
 import words
+import numpy as np
 
 def test_compare():
     """
