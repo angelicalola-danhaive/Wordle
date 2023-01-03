@@ -20,9 +20,10 @@ def test_compute_letter_frequencies():
 
 	assert(np.all(initialize.compute_letter_frequencies(['abcdc','adbec']) == [ [2,2,0,0,0,0], [2,0,1,1,0,0], [3,0,0,1,0,2] ,[2,0,1,0,1,0], [1,0,0,0,1,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0], [0,0,0,0,0,0] ,[0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0], [0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0], [0,0,0,0,0,0] ,[0,0,0,0,0,0] ]))
 
-def test_compute_scores():
+def test_compute_all():
 	"""
 		Test for the compute_scores function
 	"""
 
-	assert(np.all(initialize.compute_scores(['abcdc','adbec']) == [19,17]))
+	assert(np.all((initialize.compute_all(['ladle']))[0] == [12]))
+	assert(np.all((initialize.compute_all(['ladle']))[1] == [2.66]))
