@@ -25,5 +25,7 @@ def test_compute_all():
 		Test for the compute_scores function
 	"""
 
-	assert(np.all((initialize.compute_all(['ladle']))[0] == [12]))
-	assert(np.all((initialize.compute_all(['ladle']))[1] == [2.66]))
+	assert(np.all((initialize.compute_all(['woman']))[0] == [10]))
+	assert(np.all((initialize.compute_all(['woman']))[1] == [5.35]))
+	assert(np.all((initialize.compute_all(['eases']))[0] == [0]))
+	assert(np.all((initialize.compute_all(['eases']))[1] == [2.93]))

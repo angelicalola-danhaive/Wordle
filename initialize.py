@@ -40,12 +40,16 @@ def compute_all(words_list):
 
 	for word_index,word in enumerate(words_list):
 		word_array = list(word)
-		#fill out the scores array
+		#fill out the freq array
+		word_frequencies[word_index] = zipf_frequency(word,'en')
+
+		#fill out the scores array, giving it zero directly if it has repeated letters since that makes it a bad first guess (because we get less info)
+		if len(np.unique(word_array)) != len(word_array): #if there's one or more non-unique letters in the word, directly move on to next word
+			break
 		for letter_index,letter in enumerate(word_array):
 			index = ord(letter) - 97
 			scores[word_index]+= (frequencies[index,0] + frequencies[index,letter_index+1])
-		#fill out the freq array
-		word_frequencies[word_index] = zipf_frequency(word,'en')
+
 	return scores, word_frequencies
 
 def compute_letter_frequencies(words_list):
