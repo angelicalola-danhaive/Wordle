@@ -139,21 +139,29 @@ def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices,
 
 	if len(green_letters)!= 0:
 		for i in range(len(green_letters)):
+			print(word[green_indices[i]])
+			print(green_letters[i])
 			if word[green_indices[i]] != green_letters[i]:
+				print('green')
 				return False
 
 	if len(yellow_letters)!= 0:
 		for i in range(len(yellow_letters)):
 			if word[yellow_indices[i]] == yellow_letters[i] or (yellow_letters[i] not in word):
+				print('yellow')
 				return False			
 
 	if len(black_letters)!= 0:
 		for i in range(len(black_letters)):
-			if black_letters[i] in word:
+			#account for double letters in the guess but only one is in the answer (meaning all words with two occurences of that letter must be eliminated)
+			if ( (black_letters[i] in green_letters) or (black_letters[i] in yellow_letters) ):
+				if word.count(black_letters[i])>1: 
+					return False
+				else:
+					return True
+
+			elif black_letters[i] in word :
 				return False
 	#if all checks have passed then return True 
 	return True	
 
-	
-
-	

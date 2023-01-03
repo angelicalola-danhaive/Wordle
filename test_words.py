@@ -22,6 +22,8 @@ def test_compare():
 	assert(words.compare('table','tower') == ['G', 'B', 'B', 'B', 'Y' ])
 	assert(words.compare('books','sport') == ['B', 'B', 'G', 'B', 'Y' ])
 	assert(words.compare('sport','books') == ['Y', 'B', 'G', 'B', 'B' ])
+	assert(words.compare('spook', 'troon') == ['B', 'B', 'G', 'G', 'B' ])
+	assert(words.compare('sopok', 'troon') == ['B', 'Y', 'B', 'G', 'B' ])
 
 def test_sort():
 	"""
@@ -37,3 +39,9 @@ def test_sort():
 	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'wagor', ['G','G','G','G','B']))[1] == [4]))
 	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'noawg', ['Y','Y','Y','Y','Y']))[0] == ['wagon']))
 	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'noawg', ['Y','Y','Y','Y','Y']))[1] == [4]))
+
+def test_check_word():
+	"""
+	Test for the check_word function
+	"""
+	assert(words.check_word('aliuf',['a'],[0], ['i'] , [3] , ['g','a','n'] ) == True)
