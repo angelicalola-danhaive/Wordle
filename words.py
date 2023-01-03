@@ -61,7 +61,7 @@ def compare(guess,solution):
 	return response
 
 
-def sort(words_list,guess,response):
+def sort(words_list,frequencies,guess,response):
 	'''
 		Sorting the list of words by:
 		 1. removing all options that don't match the response array of colors (i.e. don't have letters in the right place)
@@ -80,9 +80,12 @@ def sort(words_list,guess,response):
 		----------
 		new_list
 			new list of words that match the given response colors
+		new_frequencies
+			new list of the frequencies for the words on new_list
 
 	'''
 	new_list = []
+	new_frequencies = []
 
 	green_letters = []
 	green_indices = []
@@ -104,13 +107,12 @@ def sort(words_list,guess,response):
 			black_letters.append(letter)
 
 	#check which words have all the greens in right spot, have the yellows NOT in the same spot as the guess but still in the word, and don't have blacks
-	for word in words_list:
-		print(word)
+	for index,word in enumerate(words_list):
 		keep = check_word(list(word), green_letters,green_indices, yellow_letters, yellow_indices, black_letters)
 		if keep: 
 			new_list.append(word)
-	print(new_list)
-	return new_list
+			new_frequencies.append(frequencies[index])
+	return new_list, new_frequencies
 
 def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices, black_letters):
 	'''
@@ -138,19 +140,16 @@ def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices,
 	if len(green_letters)!= 0:
 		for i in range(len(green_letters)):
 			if word[green_indices[i]] != green_letters[i]:
-				print('death by green: ', word)
 				return False
 
 	if len(yellow_letters)!= 0:
 		for i in range(len(yellow_letters)):
 			if word[yellow_indices[i]] == yellow_letters[i] or (yellow_letters[i] not in word):
-				print('death by yellow: ', word)
 				return False			
 
 	if len(black_letters)!= 0:
 		for i in range(len(black_letters)):
 			if black_letters[i] in word:
-				print('death by black: ', word)
 				return False
 	#if all checks have passed then return True 
 	return True	
