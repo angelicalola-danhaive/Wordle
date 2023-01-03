@@ -16,7 +16,7 @@ def compare(guess,solution):
 	"""
 		Comparing the characters of 2 words given as input
 		
-		Compute an element-wise comparison of two strings to return a reponse array 
+		Compute an element-wise comparison of two strings to return a response array 
 		
 		Parameters
 		----------
@@ -27,7 +27,7 @@ def compare(guess,solution):
 
 		Returns
 		----------
-		reponse
+		response
 			the array of colors corresponding to how correct the letters in the guess are
 			the colors are 'B' for black (letter not in word), 'Y' for yellow (letter in word but wrong place), 'G' for green (letter in the right place)
 	"""
@@ -61,7 +61,7 @@ def compare(guess,solution):
 	return response
 
 
-def sort(words_list,reponse):
+def sort(words_list,guess,response):
 	'''
 		Sorting the list of words by:
 		 1. removing all options that don't match the response array of colors (i.e. don't have letters in the right place)
@@ -71,15 +71,90 @@ def sort(words_list,reponse):
 		----------
 		words_list
 			list of all of possible words so far
+		guess
+			the guess that was tested by the compare function
 		response
-			the reponse array of colors, result of the compare function
+			the response array of colors, result of the compare function
 
 		Returns
 		----------
-			returns nothing as it directly modifies the list
+		new_list
+			new list of words that match the given response colors
+
 	'''
+	new_list = []
 
-	return None
+	green_letters = []
+	green_indices = []
 
+	yellow_letters = []
+	yellow_indices = []
+
+	black_letters = []
+
+	#sort through the letters to make the sorting through the words easier
+	for index,letter in enumerate(list(guess)):
+		if response[index] == 'G':
+			green_letters.append(letter)
+			green_indices.append(index)
+		if response[index] == 'Y':
+			yellow_letters.append(letter)
+			yellow_indices.append(index)
+		if response[index] == 'B':
+			black_letters.append(letter)
+
+	#check which words have all the greens in right spot, have the yellows NOT in the same spot as the guess but still in the word, and don't have blacks
+	for word in words_list:
+		print(word)
+		keep = check_word(list(word), green_letters,green_indices, yellow_letters, yellow_indices, black_letters)
+		if keep: 
+			new_list.append(word)
+	print(new_list)
+	return new_list
+
+def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices, black_letters):
+	'''
+		Checking if a word matches the response array obtained from the guess
+
+				Parameters
+		----------
+		word
+			word that we want to test, array
+		green_letters, green_indices
+			arrays with the green letters and their place in the word
+		yellow_letters, yellow_indices
+			arrays with the yellow letters and their place in the word
+		black_letters
+			array with the black letters
+
+		Returns
+		----------
+		bool
+			a boolean indicating if the word matches the reponse (True) or doesn't and should hence be removed from the list (False)
+	'''	
+	#check which words have all the greens in right spot, have the yellows NOT in the same spot as the guess but still in the word, and don't have blacks
+	#see if this loop can be improved on!
+
+	if len(green_letters)!= 0:
+		for i in range(len(green_letters)):
+			if word[green_indices[i]] != green_letters[i]:
+				print('death by green: ', word)
+				return False
+
+	if len(yellow_letters)!= 0:
+		for i in range(len(yellow_letters)):
+			if word[yellow_indices[i]] == yellow_letters[i] or (yellow_letters[i] not in word):
+				print('death by yellow: ', word)
+				return False			
+
+	if len(black_letters)!= 0:
+		for i in range(len(black_letters)):
+			if black_letters[i] in word:
+				print('death by black: ', word)
+				return False
+	#if all checks have passed then return True 
+	return True	
+
+	
 
 	
