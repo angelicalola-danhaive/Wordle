@@ -178,9 +178,32 @@ def count_difference(guess2, guess1):
 	'''
 	#want to only count each letter once so only take unique values from guess 2
 	guess2_unique = np.unique(list(guess2))
-	print(guess2_unique)
 	#returns an array len(word1) that is true when a char in guess2 is in guess1 and false other wise => we can count the False to get difference
 	repetition = np.isin(guess2_unique,list(guess1))
-	print(repetition)
 	different = np.sum(np.invert(repetition)) #sum over the false values so need to invert because np.sum counts the True values
 	return different 
+
+def verify(word):
+	'''
+		Check that the word given as input is a valid wordle word
+
+				Parameters
+		----------
+		word
+		words_list
+			the list of possible wordle words
+		Returns
+		----------
+		word
+			word that has been checked
+	'''
+	#compute the words list
+	with open('WordleWords.txt') as file:
+		words_list = [line.rstrip() for line in file] 
+	#check if input is correct
+	correct = False
+	while not correct:
+		if word.lower() not in words_list:
+			word = input('Error: Invalid word! Please provide another 5 letter word: ')
+		else: 
+			return word
