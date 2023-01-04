@@ -76,19 +76,20 @@ def guess_interactive(words_list, scores, frequencies, scores_ordered_indices):
 		tries
 			the number of guesses until finding the right one
 	'''
-	tries = 0
+	tries = 1
 	solution_found = False
+
 	#1. the code selects a word at random (the probability p is given by the frequency in the language)
 	solution = np.random.choice(words_list,size = None, replace = True, p= frequencies)
-	print(solution)
-	#2. asks the user for a first guess and provide a suggestion of the best option (based on score)
-	suggestion = words_list[scores_ordered_indices[0]] 
-	guess = input('Enter your first guess, then press ENTER. I suggest the word {}. '.format(suggestion))
-	#3. output the response array of colors
-	response = words.compare(guess, solution)
-	print('Here are the results from your guess: \n', response[0], response[1],response[2],response[3], response[4])
-	# words_list is modified to only include possible words
-	words_list,frequencies = words.sort(words_list, frequencies, guess, response)
+	# print(solution)
+
+	#guess 1 and 2 are chosen differently from the rest so they have written in different sub-functions
+	guess, words_list_1,frequencies_1 = guess1(solution,words_list, scores, frequencies, scores_ordered_indices)
+	tries +=1
+	guess, words_list_2,frequencies_2 = guess2(solution,guess,words_list, frequencies)
+	#the words_list used is the intersection of the two resulting from the first two guesses
+	words_list,indices1,indices2 = np.intersect1d(words_list_1,words_list_2,assume_unique=False, return_indices=True)
+	frequencies = np.take(frequencies_1, indices1)
 
 	#loop until the right word is found
 	while not solution_found:
@@ -104,3 +105,83 @@ def guess_interactive(words_list, scores, frequencies, scores_ordered_indices):
 		words_list,frequencies = words.sort(words_list, frequencies, guess, response)
 
 	return tries, solution
+
+def guess1(solution,words_list, scores, frequencies, scores_ordered_indices):
+	'''
+		Function to run the code for the user's first guess 
+
+		Parameters
+		----------
+		solution
+			of the wordle run
+		words_list
+			the list of all words accepted by Wordle
+		scores
+			scores given to each word
+		frequencies
+			frequencies of each word in the english language
+		scores_ordered_indices 
+			the ordered indices of the words with respect to their score (descending)
+
+		Returns
+		----------
+		guess
+			the guess
+		words_list
+			the list of all words that can still be the answer
+		frequencies
+			their frequencies
+	'''
+	#2. asks the user for a first guess and provide a suggestion of the best option (based on score)
+	suggestion = words_list[scores_ordered_indices[0]] 
+	guess = input('Enter your first guess, then press ENTER. I suggest the word {}. '.format(suggestion))
+	#3. output the response array of colors
+	response = words.compare(guess, solution)
+	print('Here are the results from your guess: \n', response[0], response[1],response[2],response[3], response[4])
+	# words_list is modified to only include possible words
+	words_list,frequencies = words.sort(words_list, frequencies, guess, response)	
+
+	return guess, words_list,frequencies
+
+def guess2(solution,guess1,words_list, frequencies):
+	'''
+		Function to run the code for the user's second guess 
+
+		Parameters
+		----------
+		solution
+			of the wordle run
+		response
+			response from guess 1
+		words_list
+			the possible words remaining after guess1
+		scores
+			scores given to each word
+		frequencies
+			frequencies of each word in the english language
+		scores_ordered_indices 
+			the ordered indices of the words with respect to their score (descending)
+
+		Returns
+		----------
+		guess
+			the guess
+		words_list
+			the list of all words that can still be the answer
+		frequencies
+			their frequencies
+	'''
+	#2. asks the user for a first guess and provide a suggestion of the best option (based on difference score)
+	difference_score = proba.compute_difference_score(words_list,guess1) 
+	index_suggestion = np.argmax(difference_score)
+	suggestion = words_list[index_suggestion] #suggest the word that has the most letters different from the first
+	guess = input('Guess again and press ENTER. I suggest the word {}. '.format(suggestion))
+	#3. output the response array of colors
+	response = words.compare(guess, solution)
+	print('Here are the results from your guess: \n', response[0], response[1],response[2],response[3], response[4])
+	# words_list is modified to only include possible words
+	words_list,frequencies = words.sort(words_list, frequencies, guess, response)	
+
+	return guess, words_list,frequencies
+
+		
