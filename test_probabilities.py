@@ -29,3 +29,6 @@ def test_compute_all():
 	assert(np.all((probabilities.compute_all(['woman']))[1] == [5.35]))
 	assert(np.all((probabilities.compute_all(['eases']))[0] == [0]))
 	assert(np.all((probabilities.compute_all(['eases']))[1] == [2.93]))
+
+def test_compute_difference_score():
+	assert(np.all(probabilities.compute_difference_score(['wagon','early'],'wasps') == [3,4]   ))

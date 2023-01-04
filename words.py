@@ -139,16 +139,12 @@ def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices,
 
 	if len(green_letters)!= 0:
 		for i in range(len(green_letters)):
-			print(word[green_indices[i]])
-			print(green_letters[i])
 			if word[green_indices[i]] != green_letters[i]:
-				print('green')
 				return False
 
 	if len(yellow_letters)!= 0:
 		for i in range(len(yellow_letters)):
 			if word[yellow_indices[i]] == yellow_letters[i] or (yellow_letters[i] not in word):
-				print('yellow')
 				return False			
 
 	if len(black_letters)!= 0:
@@ -165,3 +161,26 @@ def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices,
 	#if all checks have passed then return True 
 	return True	
 
+def count_difference(guess2, guess1):
+	'''
+		Counting how many letters differ between two words
+
+				Parameters
+		----------
+		guess1
+		guess2
+			the two words we want to compare. guess 1 is the previous guess and guess2 is the word being tested to be guessed next
+
+		Returns
+		----------
+		different
+			int of the number of letters differring from word1 and word2
+	'''
+	#want to only count each letter once so only take unique values from guess 2
+	guess2_unique = np.unique(list(guess2))
+	print(guess2_unique)
+	#returns an array len(word1) that is true when a char in guess2 is in guess1 and false other wise => we can count the False to get difference
+	repetition = np.isin(guess2_unique,list(guess1))
+	print(repetition)
+	different = np.sum(np.invert(repetition)) #sum over the false values so need to invert because np.sum counts the True values
+	return different 

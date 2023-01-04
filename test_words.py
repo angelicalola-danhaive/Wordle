@@ -45,3 +45,9 @@ def test_check_word():
 	Test for the check_word function
 	"""
 	assert(words.check_word('aliuf',['a'],[0], ['i'] , [3] , ['g','a','n'] ) == True)
+
+def test_count_difference():
+	"""
+	Test for the test_count_difference function
+	"""
+	assert(words.count_difference('wagon','wasps') == 3)

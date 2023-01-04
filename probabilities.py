@@ -1,6 +1,5 @@
 """
-	This Module contains functions needed to initialize the game. They will all be used in one big function (defined at the end of this module) that is called at the very start
-	of the wordle_solver.py
+	This Module contains functions that analyze the word list to compute different scores for the words based on selection criteria.
 	
 	Contains:
 	----------------------------------------
@@ -12,6 +11,7 @@
 """
 
 import numpy as np
+import words
 from wordfreq import word_frequency, zipf_frequency #zipf_frequency gives the freqs of a human-friendly logarithmic scale, they range from 0-8
 
 def compute_all(words_list):
@@ -80,3 +80,26 @@ def compute_letter_frequencies(words_list):
 		frequencies[i,0] = np.sum(frequencies[i,1:6]) #compute how much it appears in total
 		
 	return frequencies
+
+def compute_difference_score(words_list,guess):
+	'''
+		Function that computes a score based on how many letters differ between the guess and the words
+
+		Parameters
+		----------
+		words_list
+			list of all of possible words so far
+		guess
+			the previous guess 
+
+		Returns
+		----------
+		difference_score
+			array with the difference score assigned to each word
+	'''
+	difference_score = np.zeros(len(words_list))
+	for index,word in enumerate(words_list):
+		difference = words.count_difference(list(word),list(guess))
+		difference_score[index] = difference
+		
+	return difference_score
