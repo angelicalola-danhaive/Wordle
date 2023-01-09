@@ -12,6 +12,7 @@
 
 import numpy as np
 
+# @profile
 def compare(guess,solution):
 	"""
 		Comparing the characters of 2 words given as input
@@ -60,7 +61,7 @@ def compare(guess,solution):
 
 	return response
 
-
+# @profile
 def sort(words_list,frequencies,guess,response):
 	'''
 		Sorting the list of words by:
@@ -114,6 +115,7 @@ def sort(words_list,frequencies,guess,response):
 			new_frequencies.append(frequencies[index])
 	return new_list, new_frequencies
 
+# @profile
 def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices, black_letters):
 	'''
 		Checking if a word matches the response array obtained from the guess
@@ -161,6 +163,7 @@ def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices,
 	#if all checks have passed then return True 
 	return True	
 
+# @profile
 def count_difference(guess2, guess1):
 	'''
 		Counting how many letters differ between two words
@@ -183,6 +186,7 @@ def count_difference(guess2, guess1):
 	different = np.sum(np.invert(repetition)) #sum over the false values so need to invert because np.sum counts the True values
 	return different 
 
+# @profile
 def verify(word):
 	'''
 		Check that the word given as input is a valid wordle word
@@ -207,3 +211,10 @@ def verify(word):
 			word = input('Error: Invalid word! Please provide another 5 letter word: ')
 		else: 
 			return word
+
+def print_list(words_list):
+
+	for word in words_list:
+		print(word)
+
+	return None
