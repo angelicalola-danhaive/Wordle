@@ -12,6 +12,7 @@ import words
 import probabilities as proba
 import numpy as np
 
+# @profile
 def initialize():
 	'''
 		Function that initiliazes the game, meaning it runs everything until the first interaction with the user
@@ -57,7 +58,7 @@ def initialize():
 
 
 	return interactive, words_list, scores, frequencies
-
+# @profile
 def guess_run(words_list, scores, frequencies,interactive):
 	'''
 		Function that makes the computer guess until the solution given by the user is found
@@ -105,7 +106,7 @@ def guess_run(words_list, scores, frequencies,interactive):
 			solution_found = True
 
 	return tries, solution
-
+# @profile
 def try_guess(solution, words_list, frequencies, interactive, scores = None, number = 0, previous_guess = None):
 	'''
 		Function to make the user/computer guess
@@ -151,8 +152,14 @@ def try_guess(solution, words_list, frequencies, interactive, scores = None, num
 		suggestion = np.random.choice(words_list,size = None, replace = True, p= frequencies)
 	#obtain/generate the guess depending on the chosen mode 
 	if interactive:
-		guess = input('Enter your guess, then press ENTER. I suggest the word {}. '.format(suggestion))
-		guess = (words.verify(guess)).lower() 
+		#give the option to see the full list of possible words at this stage
+		guess = input('Enter your guess, then press ENTER. I suggest the word {}. If you want more suggestions, enter MORE. ' .format(suggestion))
+		if guess.lower() == 'more':
+			words.print_list(words_list)
+			guess = input('Now enter your guess. Reminder: I suggest the word {}. ' .format(suggestion))
+			guess = (words.verify(guess)).lower() 
+		else:
+			guess = (words.verify(guess)).lower() 
 	else:
 		guess = suggestion
 		print('I am guessing the word {}. '.format(suggestion))
