@@ -26,6 +26,7 @@ def test_compare():
 	assert(words.compare('sport','books') == ['Y', 'B', 'G', 'B', 'B' ])
 	assert(words.compare('spook', 'troon') == ['B', 'B', 'G', 'G', 'B' ])
 	assert(words.compare('sopok', 'troon') == ['B', 'Y', 'B', 'G', 'B' ])
+	assert(words.compare('goofy', 'oxbow') == ['B', 'Y', 'Y', 'B', 'B' ])
 
 def test_sort():
 	"""
@@ -46,7 +47,11 @@ def test_check_word():
 	"""
 	Test for the check_word function
 	"""
-	assert(words.check_word('aliuf',['a'],[0], ['i'] , [3] , ['g','a','n'] ) == True)
+	# assert(words.check_word('aliuf',['a'],[0], ['i'] , [3] , ['g','a','n'] ) == True)
+	# assert(words.check_word('sixes',['s', 'i', 'e' ,'s'],[0,1,3,4], [] , [] , ['s'] ) == True)
+	assert(words.check_word(list('wasps'),list('wagon'),['G', 'Y', 'B', 'B','B'] ) == False)
+	assert(words.check_word(list('sixes'),list('sises'),['G', 'G', 'B', 'G','G'] ) == True)
+
 
 def test_count_difference():
 	"""
