@@ -46,18 +46,19 @@ def compare(guess,solution):
 	# the letters that match get removed so we can focus on the yellow ones
 	for i,letter in enumerate(green_letters):
 		if letter:
-			guess_array[i] = '*'
-			solution_array[i] = '**'
-
-	#use np.interset1d to get letters that are in both + their indices in both letters
-	yellow_letters, index_guess,index_solution = np.intersect1d(guess_array,solution_array,return_indices=True)
-
-	#fill out response array using the green and yellow letter arrays
-	for i in range(len(response)):
-		if green_letters[i]:
 			response[i] = 'G'
-		if i<len(yellow_letters) and index_guess[i] != index_solution[i]:
-			response[index_guess[i]] = 'Y'
+			guess_array[i] = '*'
+			solution_array[i] = '#'
+
+	#select yellow letters 
+	for index,letter in enumerate(guess_array):
+		if letter in solution_array:
+			response[index]= 'Y'
+			guess_array[index] = '*'
+			#to get the index of the first occurence of the letter in the solution array
+			index_in_solution = ((np.intersect1d(solution_array, letter, return_indices = True) )[1])[0]
+			solution_array[index_in_solution] = '#' 
+
 
 	return response
 
@@ -88,37 +89,15 @@ def sort(words_list,frequencies,guess,response):
 	new_list = []
 	new_frequencies = []
 
-	green_letters = []
-	green_indices = []
-
-	yellow_letters = []
-	yellow_indices = []
-
-	black_letters = []
-
-	#sort through the letters to make the sorting through the words easier
-	for index,letter in enumerate(list(guess)):
-		if response[index] == 'G':
-			green_letters.append(letter)
-			green_indices.append(index)
-		if response[index] == 'Y':
-			yellow_letters.append(letter)
-			yellow_indices.append(index)
-		if response[index] == 'B':
-			black_letters.append(letter)
-
 	#check which words have all the greens in right spot, have the yellows NOT in the same spot as the guess but still in the word, and don't have blacks
 	for index,word in enumerate(words_list):
-		keep = check_word(list(word), green_letters,green_indices, yellow_letters, yellow_indices, black_letters)
+		keep = check_word(list(word), list(guess), list(response))
 		if keep: 
 			new_list.append(word)
 			new_frequencies.append(frequencies[index])
-			if frequencies[index] == 0.0:
-				print('Error, zero freq for word: {}'.format(word))
 	return new_list, new_frequencies
 
-# @profile
-def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices, black_letters):
+def check_word(word,guess,response):
 	'''
 		Checking if a word matches the response array obtained from the guess
 
@@ -140,30 +119,26 @@ def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices,
 	'''	
 	#check which words have all the greens in right spot, have the yellows NOT in the same spot as the guess but still in the word, and don't have blacks
 	#see if this loop can be improved on!
-
-	if len(green_letters)!= 0:
-		for i in range(len(green_letters)):
-			if word[green_indices[i]] != green_letters[i]:
-				return False
-
-	if len(yellow_letters)!= 0:
-		for i in range(len(yellow_letters)):
-			if word[yellow_indices[i]] == yellow_letters[i] or (yellow_letters[i] not in word):
-				return False			
-
-	if len(black_letters)!= 0:
-		for i in range(len(black_letters)):
-			#account for double letters in the guess but only one is in the answer (meaning all words with two occurences of that letter must be eliminated)
-			if ( (black_letters[i] in green_letters) or (black_letters[i] in yellow_letters) ):
-				if word.count(black_letters[i])>1: 
-					return False
-				else:
-					return True
-
-			elif black_letters[i] in word :
-				return False
-	#if all checks have passed then return True 
-	return True	
+	for index_guess, letter_guess in enumerate(guess):
+		if response[index_guess] == 'G' and word[index_guess]!= letter_guess:
+			return False
+		elif response[index_guess] == 'G' and word[index_guess]== letter_guess:
+			word[index_guess] == '*'
+		
+		if response[index_guess] == 'Y' and ( (letter_guess not in word) or (word[index_guess] == letter_guess) )  :
+			return False
+		elif response[index_guess] == 'Y' and (letter_guess in word) and (word[index_guess] != letter_guess):
+			word[index_guess] == '*'
+			
+		if response[index_guess] == 'B':
+			indices = [idx for idx, value in enumerate(guess) if value == letter_guess]
+			occurences = 0
+			for i in indices:
+				if response[i] == 'G' or response[i] == 'Y':
+					occurences+=1
+			if word.count(letter_guess) > occurences:
+				return False     
+	return True
 
 # @profile
 def count_difference(guess2, guess1):
@@ -193,7 +168,7 @@ def verify(word):
 	'''
 		Check that the word given as input is a valid wordle word
 
-				Parameters
+		Parameters
 		----------
 		word
 			string, input that you want to verify is in the list of accepted words
@@ -213,12 +188,33 @@ def verify(word):
 			return word
 
 def load_list():
+	'''
+		Load the possible Wordle words into an array 
+
+		Parameters
+		----------
+		
+		Returns
+		----------
+		words_list
+			array of all possible Wordle words
+	'''
 	with open('WordleWords.txt') as file:
 		words_list = [line.rstrip() for line in file] 
 	return words_list
 
 
 def print_list(words_list):
+	'''
+		Print all of the words from a given list
+
+		Parameters
+		----------
+		words_list
+			list of words too be printed
+		Returns
+		----------
+	'''
 
 	for word in words_list:
 		print(word)
