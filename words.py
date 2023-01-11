@@ -113,6 +113,8 @@ def sort(words_list,frequencies,guess,response):
 		if keep: 
 			new_list.append(word)
 			new_frequencies.append(frequencies[index])
+			if frequencies[index] == 0.0:
+				print('Error, zero freq for word: {}'.format(word))
 	return new_list, new_frequencies
 
 # @profile
@@ -194,16 +196,14 @@ def verify(word):
 				Parameters
 		----------
 		word
-		words_list
-			the list of possible wordle words
+			string, input that you want to verify is in the list of accepted words
 		Returns
 		----------
 		word
 			word that has been checked
 	'''
 	#compute the words list
-	with open('WordleWords.txt') as file:
-		words_list = [line.rstrip() for line in file] 
+	words_list = load_list()
 	#check if input is correct
 	correct = False
 	while not correct:
@@ -211,6 +211,12 @@ def verify(word):
 			word = input('Error: Invalid word! Please provide another 5 letter word: ')
 		else: 
 			return word
+
+def load_list():
+	with open('WordleWords.txt') as file:
+		words_list = [line.rstrip() for line in file] 
+	return words_list
+
 
 def print_list(words_list):
 

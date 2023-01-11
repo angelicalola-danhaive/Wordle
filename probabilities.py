@@ -14,6 +14,7 @@ import numpy as np
 import words
 from wordfreq import word_frequency, zipf_frequency #zipf_frequency gives the freqs of a human-friendly logarithmic scale, they range from 0-8
 
+# @profile
 def compute_all(words_list):
 	'''
 		Function that assings a word a score based on how probable it is that it's the answer + a frequency in the english language
@@ -28,7 +29,7 @@ def compute_all(words_list):
 		----------
 		scores
 			an array with the score given to each word, in the order of the words appearing on the words_list
-		word_frequenciesfrequencies
+		word_frequencies
 			array with the frequency of each word in the order that they appear in words_list
 	'''
 	scores = np.zeros(len(words_list))
@@ -43,15 +44,17 @@ def compute_all(words_list):
 		#fill out the freq array
 		word_frequencies[word_index] = zipf_frequency(word,'en')
 
-		#fill out the scores array, giving it zero directly if it has repeated letters since that makes it a bad first guess (because we get less info)
-		if len(np.unique(word_array)) != len(word_array): #if there's one or more non-unique letters in the word, directly move on to next word
-			continue
+		# #penalize words with repeated letters
+		# if len(np.unique(word_array)) != len(word_array): #if there's one or more non-unique letters in the word, directly move on to next word
+		# 	continue
 		for letter_index,letter in enumerate(word_array):
 			index = ord(letter) - 97
 			scores[word_index]+= (frequencies[index,0] + frequencies[index,letter_index+1])
-
+		if scores[word_index] == 0.0:
+			print('Error: zero score value found for the word: {}'.format(word))
 	return scores, word_frequencies
 
+# @profile
 def compute_letter_frequencies(words_list):
 	'''
 		Function that computes the frequency of each letter in a 5 letter word and in each position
@@ -81,6 +84,7 @@ def compute_letter_frequencies(words_list):
 		
 	return frequencies
 
+# @profile
 def compute_difference_score(words_list,guess):
 	'''
 		Function that computes a score based on how many letters differ between the guess and the words
@@ -101,5 +105,24 @@ def compute_difference_score(words_list,guess):
 	for index,word in enumerate(words_list):
 		difference = words.count_difference(list(word),list(guess))
 		difference_score[index] = difference
-		
+
 	return difference_score
+def renormalize(probability_distribution):
+	'''
+		Function that renormalizes an array so that it can be used as a probability distribution (from 0 to 1)
+
+		Parameters
+		----------
+		probability_distribution 
+			array of probabilities for each remaining word, not normalized since possible words are removed after each guess
+
+		Returns
+		----------
+		normalized probability distribution
+	'''
+	if sum(probability_distribution) != 0.0: #make sure there is no division by zero
+	#return the normalized array
+		return  np.array(probability_distribution)/sum(probability_distribution)
+	else:
+		print('Error! Division by zero so array replaced by [1]')
+		return [1]

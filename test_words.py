@@ -13,6 +13,8 @@
 import words
 import numpy as np
 
+from unittest import mock
+
 def test_compare():
 	"""
 	Test for the compare function
@@ -48,6 +50,17 @@ def test_check_word():
 
 def test_count_difference():
 	"""
-	Test for the test_count_difference function
+	Test for the count_difference function
 	"""
 	assert(words.count_difference('wagon','wasps') == 3)
+
+def test_verify():
+	"""
+	Test for the verify function
+	"""
+	assert(  words.verify('zebra') == 'zebra' )
+	#check that if the wrong word is put then it requests another
+	with mock.patch('builtins.input', return_value="zebra"):
+		assert(  words.verify('ablar') == 'zebra' )
+
+

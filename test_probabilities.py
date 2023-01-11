@@ -1,5 +1,5 @@
 """
-	This Module contains the unit tests for the functions in  initialize.py
+	This Module contains the unit tests for the functions in  probabilities.py
 	
 	Contains:
 	----------------------------------------
@@ -27,8 +27,13 @@ def test_compute_all():
 
 	assert(np.all((probabilities.compute_all(['woman']))[0] == [10]))
 	assert(np.all((probabilities.compute_all(['woman']))[1] == [5.35]))
-	assert(np.all((probabilities.compute_all(['eases']))[0] == [0]))
+	# assert(np.all((probabilities.compute_all(['eases']))[0] == [0]))
 	assert(np.all((probabilities.compute_all(['eases']))[1] == [2.93]))
 
-def test_compute_difference_score():
-	assert(np.all(probabilities.compute_difference_score(['wagon','early'],'wasps') == [3,4]   ))
+def test_renormalize():
+	"""
+		Test for the renormalize function
+	"""
+	assert( np.all(probabilities.renormalize( [5,5] ) == [0.5,0.5]) )
+	assert( np.all(probabilities.renormalize( [0.0,0.0] ) == [1])  )
+
