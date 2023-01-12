@@ -64,40 +64,39 @@ def compare(guess,solution):
 
 # @profile
 def sort(words_list,frequencies,guess,response):
-	'''
-		Sorting the list of words by:
-		 1. removing all options that don't match the response array of colors (i.e. don't have letters in the right place)
-		 2. sorting the remaining ones by probabilities
+ 	new_list = []
+ 	new_frequencies = []
 
-				Parameters
-		----------
-		words_list
-			list of all of possible words so far
-		guess
-			the guess that was tested by the compare function
-		response
-			the response array of colors, result of the compare function
+ 	green_letters = []
+ 	green_indices = []
 
-		Returns
-		----------
-		new_list
-			new list of words that match the given response colors
-		new_frequencies
-			new list of the frequencies for the words on new_list
+ 	yellow_letters = []
+ 	yellow_indices = []
 
-	'''
-	new_list = []
-	new_frequencies = []
+ 	black_letters = []
 
-	#check which words have all the greens in right spot, have the yellows NOT in the same spot as the guess but still in the word, and don't have blacks
-	for index,word in enumerate(words_list):
-		keep = check_word(list(word), list(guess), list(response))
-		if keep: 
-			new_list.append(word)
-			new_frequencies.append(frequencies[index])
-	return new_list, new_frequencies
+ 	#sort through the letters to make the sorting through the words easier
+ 	for index,letter in enumerate(list(guess)):
+ 		if response[index] == 'G':
+ 			green_letters.append(letter)
+ 			green_indices.append(index)
+ 		if response[index] == 'Y':
+ 			yellow_letters.append(letter)
+ 			yellow_indices.append(index)
+ 		if response[index] == 'B':
+ 			black_letters.append(letter)
 
-def check_word(word,guess,response):
+ 	#check which words have all the greens in right spot, have the yellows NOT in the same spot as the guess but still in the word, and don't have blacks
+ 	for index,word in enumerate(words_list):
+ 		keep = check_word(list(word), green_letters,green_indices, yellow_letters, yellow_indices, black_letters)
+ 		if keep: 
+ 			new_list.append(word)
+ 			new_frequencies.append(frequencies[index])
+ 			if frequencies[index] == 0.0:
+ 				print('Error, zero freq for word: {}'.format(word))
+ 	return new_list, new_frequencies
+
+def check_word(word,green_letters,green_indices, yellow_letters, yellow_indices, black_letters):
 	'''
 		Checking if a word matches the response array obtained from the guess
 
@@ -119,26 +118,31 @@ def check_word(word,guess,response):
 	'''	
 	#check which words have all the greens in right spot, have the yellows NOT in the same spot as the guess but still in the word, and don't have blacks
 	#see if this loop can be improved on!
-	for index_guess, letter_guess in enumerate(guess):
-		if response[index_guess] == 'G' and word[index_guess]!= letter_guess:
-			return False
-		elif response[index_guess] == 'G' and word[index_guess]== letter_guess:
-			word[index_guess] == '*'
-		
-		if response[index_guess] == 'Y' and ( (letter_guess not in word) or (word[index_guess] == letter_guess) )  :
-			return False
-		elif response[index_guess] == 'Y' and (letter_guess in word) and (word[index_guess] != letter_guess):
-			word[index_guess] == '*'
-			
-		if response[index_guess] == 'B':
-			indices = [idx for idx, value in enumerate(guess) if value == letter_guess]
-			occurences = 0
-			for i in indices:
-				if response[i] == 'G' or response[i] == 'Y':
-					occurences+=1
-			if word.count(letter_guess) > occurences:
-				return False     
-	return True
+
+	if len(green_letters)!= 0:
+		for i in range(len(green_letters)):
+			if word[green_indices[i]] != green_letters[i]:
+				return False
+
+	if len(yellow_letters)!= 0:
+		for i in range(len(yellow_letters)):
+			if word[yellow_indices[i]] == yellow_letters[i] or (yellow_letters[i] not in word):
+				return False			
+
+	if len(black_letters)!= 0:
+		for i in range(len(black_letters)):
+			#account for double letters in the guess but only one is in the answer 
+			if ( (black_letters[i] in green_letters) or (black_letters[i] in yellow_letters) ):
+			#only discard a word if it has the black letter too many 
+				if word.count(black_letters[i])> ( green_letters.count(black_letters[i]) + yellow_letters.count(black_letters[i]) ): 
+					return False
+				else:
+					return True
+
+			elif black_letters[i] in word :
+				return False
+	#if all checks have passed then return True 
+	return True	
 
 # @profile
 def count_difference(guess2, guess1):
