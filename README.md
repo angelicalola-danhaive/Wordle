@@ -6,10 +6,10 @@ Motivation??
 
 ## Contents
 The following files are contained in this project:
-    - 'wordle_solver.py' : contains the body of the code
-    - 'words.py': module containing functions that handle and compare words
-    - 'probabilities.py': module containing functions that computing the different probabilities and scores associated to each word
-    - 'game.py': module containing functions necessary to operate the game, such as generating guessing and testing them against the solution
+    - `wordle_solver.py` : contains the body of the code
+    - `words.py`: module containing functions that handle and compare words
+    - `probabilities.py`: module containing functions that computing the different probabilities and scores associated to each word
+    - `game.py`: module containing functions necessary to operate the game, such as generating guessing and testing them against the solution
     
 Each module also has the corresponding test file where all of the unit tests for the functions are stored.
 
@@ -19,10 +19,12 @@ This code can be downloaded as a Docker project and hence be run on any machine.
     - Download 
    
 ## How to run
-    - run 'wordle_solver.py' from the command line:
-   '''bash
+Running the code is simple. 
+    - Run`wordle_solver.py` from the command line:
+    
+   ```bash
       python wordle_solver.py
-    '''
+   ```
     - you will then be asked which version of the game you want to play, enter 'interact' if you want to try to guess the computer-generated word, or 'solve' if you want the computer to solve a word you input
     - In the latter case, the code will run by itself until the solution you entered is found
     -If you are guessing, then the computer will suggest a guess, which you are free to use or type in any other 5-letter word to guess. You can type 'more' if you want to see the list of all possible words at this stage of the game.
