@@ -12,10 +12,10 @@
 
 import numpy as np
 import words
-from wordfreq import word_frequency, zipf_frequency #zipf_frequency gives the freqs of a human-friendly logarithmic scale, they range from 0-8
+# from wordfreq import word_frequency, zipf_frequency #zipf_frequency gives the freqs of a human-friendly logarithmic scale, they range from 0-8
 
 # @profile
-def compute_all(words_list):
+def compute_all(words_list, first = False):
 	'''
 		Function that assings a word a score based on how probable it is that it's the answer + a frequency in the english language
 		Will be used at the beginning suring initialization of the game (only computed once)
@@ -33,7 +33,7 @@ def compute_all(words_list):
 			array with the frequency of each word in the order that they appear in words_list
 	'''
 	scores = np.zeros(len(words_list))
-	word_frequencies = np.zeros(len(words_list))
+	# word_frequencies = np.zeros(len(words_list))
 
 	frequencies = compute_letter_frequencies(words_list)
 
@@ -42,17 +42,18 @@ def compute_all(words_list):
 	for word_index,word in enumerate(words_list):
 		word_array = list(word)
 		#fill out the freq array
-		word_frequencies[word_index] = zipf_frequency(word,'en')
-
-		# #penalize words with repeated letters
-		# if len(np.unique(word_array)) != len(word_array): #if there's one or more non-unique letters in the word, directly move on to next word
-		# 	continue
+		# word_frequencies[word_index] = zipf_frequency(word,'en')
+		unique = len(np.unique(word_array) )
+		#penalize words with repeated letters
+		if first and unique!= 5: #if there's one or more non-unique letters in the word, directly move on to next word
+			continue
 		for letter_index,letter in enumerate(word_array):
 			index = ord(letter) - 97
-			scores[word_index]+= (frequencies[index,0] + frequencies[index,letter_index+1])
-		if scores[word_index] == 0.0:
-			print('Error: zero score value found for the word: {}'.format(word))
-	return scores, word_frequencies
+			scores[word_index]+= frequencies[index]
+		# if scores[word_index] == 0.0:
+		# 	print('Error: zero score value found for the word: {}'.format(word))
+		scores[word_index] = scores[word_index]/(10*(6-unique)) #reduce score of double letters
+	return scores
 
 # @profile
 def compute_letter_frequencies(words_list):
@@ -70,18 +71,18 @@ def compute_letter_frequencies(words_list):
 		frequencies
 			2D array [i,j] with i,0 the frequency of the ith letter in a 5 letter word, and i,j>0 the frequency of the ith letter in the jth position
 	'''
-	frequencies = np.zeros((26,6))
+	frequencies = np.zeros(26)
 
 	#count how many times each letter appears in each position
 
 	for word in words_list:
 		word_array = list(word)
-		for position,letter in enumerate(word_array):
+		for letter in word_array:
 			index = ord(letter) - 97 #-96 gives a = 1, but our array starts at index 0 so a=0, meaning we need to substract 97
-			frequencies[index,position+1]+= 1 #position+1 because j=0 is the overall frequency in words
-	for i in range(26): #to go through all of the letters
-		frequencies[i,0] = np.sum(frequencies[i,1:6]) #compute how much it appears in total
-		
+			# frequencies[index,position+1]+= 1 #position+1 because j=0 is the overall frequency in words
+			frequencies[index]+= 1
+	# for i in range(26): #to go through all of the letters
+		# frequencies[i,0] = np.sum(frequencies[i,1:6]) #compute how much it appears in total
 	return frequencies
 
 # @profile
@@ -107,6 +108,7 @@ def compute_difference_score(words_list,guess):
 		difference_score[index] = difference
 
 	return difference_score
+
 def renormalize(probability_distribution):
 	'''
 		Function that renormalizes an array so that it can be used as a probability distribution (from 0 to 1)

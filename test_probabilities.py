@@ -18,17 +18,16 @@ def test_compute_letter_frequencies():
 		Test for the compute_letter_frequencies function
 	"""
 
-	assert(np.all(probabilities.compute_letter_frequencies(['abcdc','adbec']) == [ [2,2,0,0,0,0], [2,0,1,1,0,0], [3,0,0,1,0,2] ,[2,0,1,0,1,0], [1,0,0,0,1,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0], [0,0,0,0,0,0] ,[0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0], [0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0], [0,0,0,0,0,0] ,[0,0,0,0,0,0] ,[0,0,0,0,0,0], [0,0,0,0,0,0] ,[0,0,0,0,0,0] ]))
+	assert(np.all(probabilities.compute_letter_frequencies(['bubby', 'buchu']) == [0., 4, 1, 0., 0., 0., 0., 1, 0, 0. ,0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 3, 0., 0., 0., 1, 0.] ) )
 
 def test_compute_all():
 	"""
 		Test for the compute_scores function
 	"""
 
-	assert(np.all((probabilities.compute_all(['woman']))[0] == [10]))
-	assert(np.all((probabilities.compute_all(['woman']))[1] == [5.35]))
-	# assert(np.all((probabilities.compute_all(['eases']))[0] == [0]))
-	assert(np.all((probabilities.compute_all(['eases']))[1] == [2.93]))
+	assert(np.all((probabilities.compute_all(['woman'])) == [5]))
+	assert(np.all((probabilities.compute_all(['wasps'])) == [7]))
+	assert(np.all(probabilities.compute_all(['wasps'], True) == [0]))
 
 def test_renormalize():
 	"""
@@ -37,3 +36,8 @@ def test_renormalize():
 	assert( np.all(probabilities.renormalize( [5,5] ) == [0.5,0.5]) )
 	assert( np.all(probabilities.renormalize( [0.0,0.0] ) == [1])  )
 
+def test_compute_difference_score():
+	"""
+		Test for the compute_difference_score function
+	"""
+	assert( np.all( probabilities.compute_difference_score(['right','wrong'], 'wrong') == [3,0] )  ) 
