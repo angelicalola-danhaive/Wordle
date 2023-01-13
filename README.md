@@ -36,7 +36,7 @@ Alternatively, you can clone this repository manually:
     ```bash
       cd wordle_directory
       git clone https://github.com/angelicalola-danhaive/Wordle.git
-      ```
+    ```
 If you chose to do this, make sure you have installed python, git, and pandas.
 
 ## How to run
@@ -51,3 +51,26 @@ Running the code is simple.
  - If you are guessing, then the computer will suggest a guess, which you are free to use or type in any other 5-letter word to guess. You can type 'more' if you want to see the list of all possible words at this stage of the game.
     
 In 'wordle_solver.py', there is also the option to loop the code over a list of words without inputting anything. To do so, comment out the first outlined block of code and uncomment the bottom section, then run again.
+
+## Features
+
+??
+
+## Frameworks
+This entire project is coded in Python. Most of the functions in the different modules have corresponding unit tests found in the `wordle_module.py` files. If you edit this code in your local repository, you can run these tests to check the functions still work correctly. Either
+    
+   ```bash
+      pytest
+   ```
+to run all of them or 
+    
+   ```bash
+      pytest test_module.py
+   ```
+to only run the tests for a specific module.
+These unit tests are implemented through a continuous integration in GitHub repository so that commits from the development branch can only be merged with the main if all of the unit tests pass. 
+
+
+
+
+
