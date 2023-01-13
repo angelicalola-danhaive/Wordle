@@ -25,8 +25,8 @@ def test_compute_all():
 		Test for the compute_scores function
 	"""
 
-	assert(np.all((probabilities.compute_all(['woman'])) == [5]))
-	assert(np.all((probabilities.compute_all(['wasps'])) == [7]))
+	assert(np.all((probabilities.compute_all(['woman'])) == [5/10]))
+	assert(np.all((probabilities.compute_all(['wasps'])) == [7/(10*2)]))
 	assert(np.all(probabilities.compute_all(['wasps'], True) == [0]))
 
 def test_renormalize():
