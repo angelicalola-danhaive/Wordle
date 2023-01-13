@@ -15,12 +15,33 @@ Each module also has the corresponding test file where all of the unit tests for
 
 ## Installation
 
-This code can be downloaded as a Docker project and hence be run on any machine. To do so, follow these steps:
-    - Download 
-   
+This code can be downloaded as a Docker project and hence be run on any machine. The `Dockerfile` can be found in this repository. To run the code:
+ - Go in the directory where the Dockerfile is on your local machine:
+ 
+   ```bash
+      cd docker_directory
+   ```
+ - Create your image from the Dockerfile
+ 
+    ```bash
+      docker build -t image_name .
+   ```
+ - Create your container from the image
+    ```bash
+      docker run --rm -ti conda
+   ``` 
+ - the Dockerfile automatically clones this repository in your local directory, so you can now directly run your  `wordle_solver.py`. 
+ 
+Alternatively, you can clone this repository manually:
+    ```bash
+      cd wordle_directory
+      git clone https://github.com/angelicalola-danhaive/Wordle.git
+      ```
+If you chose to do this, make sure you have installed python, git, and pandas.
+
 ## How to run
 Running the code is simple. 
-    - Run`wordle_solver.py` from the command line:
+ - Run `wordle_solver.py` from the command line:
     
    ```bash
       python wordle_solver.py
