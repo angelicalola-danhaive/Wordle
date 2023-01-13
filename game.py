@@ -17,7 +17,7 @@ import sys
 np.set_printoptions(threshold=sys.maxsize)
 
 # @profile
-def initialize():
+def initialize(run_in_bash = False):
 	'''
 		Function that initiliazes the game, meaning it runs everything until the first interaction with the user
 
@@ -35,32 +35,34 @@ def initialize():
 		frequencies
 			frequencies of each word in the english language
 	'''
-	answer = input('Welcome to the Wordle Solver, would you like to play interactively or ask me to solve for a word? Write INTERACT or SOLVE and press ENTER: ')
-	#make sure only accepted answers are given, run the loop until the answer is valid
-	is_correct = False
-	while not is_correct:
-		if answer.lower() == 'interact':
-			interactive = True
-			is_correct = True
-		elif answer.lower() == 'solve':
-			interactive = False
-			is_correct = True
-		else:
-			answer = input('Invalid answer, please try again: ')
-
+	if run_in_bash:
+		interactive = False
+	else:
+		answer = input('Welcome to the Wordle Solver, would you like to play interactively or ask me to solve for a word? Write INTERACT or SOLVE and press ENTER: ')
+		#make sure only accepted answers are given, run the loop until the answer is valid
+		is_correct = False
+		while not is_correct:
+			if answer.lower() == 'interact':
+				interactive = True
+				is_correct = True
+			elif answer.lower() == 'solve':
+				interactive = False
+				is_correct = True
+			else:
+				answer = input('Invalid answer, please try again: ')
 
 	#load of all the words into a list
 	words_list = words.load_list()
 
 	#compute the arrays containing the scores and frequencies of each word in the list
-	scores, frequencies = proba.compute_all(words_list)
+	scores= proba.compute_all(words_list,True)
+	# print(scores)
 
 	#normalize the frequencies and scores so that they sum to 1 and hence can be used as probabilities
-	frequencies = proba.renormalize(frequencies)
-	scores = proba.renormalize(scores)
+	# scores = proba.renormalize(scores)
 
 
-	return interactive, words_list, scores, frequencies
+	return interactive, words_list, scores
 # @profile
 
 def pick_solution(words_list,interactive):
@@ -107,13 +109,19 @@ def guess_run(words_list, solution, probability_distribution,interactive):
 	tries = 1
 	solution_found = False
 
-	guess1, words_list_1,probability_distribution1 = try_guess(solution, words_list, probability_distribution,interactive) 
+	guess1, words_list_1,probability_distribution1 = try_guess(solution, words_list, probability_distribution,interactive, 'first') 
+
+	if guess1==solution:
+		return tries, solution
 	
 	tries +=1
-	guess2, words_list_2,probability_distribution2 = try_guess(solution,words_list,probability_distribution, interactive, previous_guess = guess1)
+	guess2, words_list_2,probability_distribution2 = try_guess(solution,words_list,probability_distribution, interactive,guess1)
+
+	if guess2==solution:
+		return tries, solution
 	#the words_list used is the intersection of the two resulting from the first two guesses
-	words_list,indices1,indices2 = np.intersect1d(words_list_1,words_list_2,assume_unique=False, return_indices=True)
-	probability_distribution = np.take(probability_distribution1, indices1)
+	words_list = np.intersect1d(words_list_1,words_list_2,assume_unique=False)
+	probability_distribution = proba.compute_all(words_list)
 	#renormalize
 	probability_distribution = proba.renormalize(probability_distribution)
 
@@ -121,7 +129,6 @@ def guess_run(words_list, solution, probability_distribution,interactive):
 	while not solution_found:
 		tries+= 1
 		guess, words_list, probability_distribution  = try_guess(solution, words_list, probability_distribution, interactive)
-
 		if guess == solution:
 			solution_found = True
 
@@ -168,7 +175,7 @@ def try_guess(solution, words_list, probability_distribution, interactive, previ
 			guess = (words.verify(guess)).lower() 
 	else:
 		guess = suggestion
-		print('I am guessing the word {}. '.format(suggestion))
+		# print('I am guessing the word {}. '.format(suggestion))
 
 	#exit the function if the guess matches the solution
 	if guess.lower() == solution:
@@ -176,12 +183,11 @@ def try_guess(solution, words_list, probability_distribution, interactive, previ
 	
 	#compute the response array of colors
 	response = words.compare(guess, solution)
-	print('Here are the results: \n', response[0], response[1],response[2],response[3], response[4])
-
+	# print('Here are the results: \n', response[0], response[1],response[2],response[3], response[4])
 	# words_list is modified to only include possible words, and the frequency array is modified accordingly
-	words_list,probability_distribution = words.sort(words_list, probability_distribution, guess, response)
-
-	probability_distribution = proba.renormalize(probability_distribution)
+	words_list= words.sort(words_list, guess, response)
+	probability_distribution = proba.compute_all(words_list)
+	# probability_distribution = proba.renormalize(probability_distribution)
 
 	return guess, words_list, probability_distribution	
 
@@ -205,15 +211,21 @@ def generate_guess(words_list, probability_distribution, interactive, previous_g
 		suggestion
 			string, for the next guess
 	'''
-	if previous_guess == None:
-		suggestion = np.random.choice(words_list,size = None, replace = True, p= probability_distribution)
+
+	if previous_guess == None or previous_guess == 'first':
+		# suggestion = np.random.choice(words_list,size = None, replace = True) #p= probability_distribution)
+		suggestion = words_list[np.argmax(probability_distribution)]
 	else:
 		difference_score = proba.compute_difference_score(words_list,previous_guess) 
 		#only select from words that have all different letters than guess 1
 		indices = [i for i, x in enumerate(difference_score) if x == 5] 
 		new_frequencies = np.take(probability_distribution,indices)
 		new_words_list = np.take(words_list,indices) #containing only the words with a score of 5
-		new_frequencies = new_frequencies/sum(new_frequencies)
-		suggestion = np.random.choice(new_words_list,size = None, replace = True,p=new_frequencies)		
+		# new_frequencies = new_frequencies/sum(new_frequencies)
+		# suggestion = np.random.choice(new_words_list,size = None, replace = True, p=new_frequencies)
+		suggestion = words_list[np.argmax(new_frequencies)]		
+		# suggestion = np.random.choice(words_list,size = None, replace = True, p= probability_distribution)
+		# suggestion = words_list[np.argmax(probability_distribution)]
+
 		
 	return suggestion
