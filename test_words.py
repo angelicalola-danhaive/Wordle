@@ -3,7 +3,18 @@
 	
 	Contains:
 	----------------------------------------
-
+	test_compare
+		Test for the compare function
+	test_sort
+		Test for the sort function
+	test_check_word
+		Test for the check_word function
+	test_count_difference
+		Test for the count_difference function
+	test_verify
+		Test for the verify function
+	test_load_list
+		Test for the load_list function
 	----------------------------------------
 	
 	
@@ -12,6 +23,7 @@
 
 import words
 import numpy as np
+import pandas
 
 from unittest import mock
 
@@ -34,14 +46,10 @@ def test_sort():
 	"""
 	#checks: general, all black, all green, all yellow word
 	#in all the checks we assume the right word is wagon (for the response array)
-	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'weary', ['G','B','Y','B','B']))[0] == ['wasps', 'wagon']))
-	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'weary', ['G','B','Y','B','B']))[1] == [2, 4]))
-	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4] ,'plith', ['B','B','B','B','B']))[0] == ['above','zebra', 'wagon']))
-	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4] ,'plith', ['B','B','B','B','B']))[1] == [1,3,4]))
-	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'wagor', ['G','G','G','G','B']))[0] == ['wagon']))
-	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'wagor', ['G','G','G','G','B']))[1] == [4]))
-	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'noawg', ['Y','Y','Y','Y','Y']))[0] == ['wagon']))
-	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], [1,2,3,4], 'noawg', ['Y','Y','Y','Y','Y']))[1] == [4]))
+	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], 'weary', ['G','B','Y','B','B'])) == ['wasps', 'wagon']))
+	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'] ,'plith', ['B','B','B','B','B'])) == ['above','zebra', 'wagon']))
+	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'],  'wagor', ['G','G','G','G','B'])) == ['wagon']))
+	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], 'noawg', ['Y','Y','Y','Y','Y']))== ['wagon']))
 
 def test_check_word():
 	"""
@@ -68,4 +76,13 @@ def test_verify():
 	with mock.patch('builtins.input', return_value="zebra"):
 		assert(  words.verify('ablar') == 'zebra' )
 
+def test_load_list():
+	"""
+	Test for the load_list function
+	"""
+	words_list = words.load_list()
+	#check that all of the words have been loaded
+	assert(len(words_list) == 12947) 
+	#check that none of the slots are empty
+	assert( pandas.isnull( words_list ) .any() == False)
 
