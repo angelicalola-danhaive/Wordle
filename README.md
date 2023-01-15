@@ -38,7 +38,7 @@ Alternatively, you can clone this repository manually:
     ```bash
       cd wordle_directory
       git clone https://github.com/angelicalola-danhaive/Wordle.git
-    ```
+   ```
 If you chose to do this, make sure you have installed python3.9, git, pandas, and matplotlib.
 
 ## How to run
