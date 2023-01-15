@@ -124,13 +124,13 @@ def guess_run(words_list, solution, scores,interactive):
 	guess1, words_list_1,scores1 = try_guess(solution, words_list, scores,interactive) 
 
 	if guess1==solution:
-		return tries, solution
+		return tries
 	
 	tries +=1
 	guess2, words_list_2,scores2 = try_guess(solution,words_list,scores, interactive, guess1)
 
 	if guess2==solution:
-		return tries, solution
+		return tries
 
 	#the words_list used is the intersection of the two resulting from the first two guesses
 	words_list = np.intersect1d(words_list_1,words_list_2,assume_unique=False)
