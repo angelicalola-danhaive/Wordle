@@ -151,6 +151,9 @@ def guess_run(words_list, solution, scores,interactive):
 
 		words_list = new_words_list
 		scores = new_scores
+		
+	if type(tries) != type(1):
+		print('Error: tries is not an integer!')
 	return tries
 
 
