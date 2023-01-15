@@ -35,10 +35,9 @@ This code can be downloaded as a Docker project and hence be run on any machine.
  
 Alternatively, you can clone this repository manually:
 
-    ```
       cd wordle_directory
       git clone https://github.com/angelicalola-danhaive/Wordle.git
-    ```
+      
 If you chose to do this, make sure you have installed python3.9, git, pandas, and matplotlib.
 
 ## How to run
