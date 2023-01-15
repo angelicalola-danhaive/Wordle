@@ -26,11 +26,11 @@ This code can be downloaded as a Docker project and hence be run on any machine.
  
     ```bash
       docker build -t image_name .
-   ```
+    ```
  - Create your container from the image
     ```bash
       docker run --rm -ti image_name
-   ``` 
+    ``` 
  - the Dockerfile automatically clones this repository in your local directory, so you can now directly run your  `wordle_solver.py`. 
  
 Alternatively, you can clone this repository manually:
@@ -38,7 +38,7 @@ Alternatively, you can clone this repository manually:
     ```bash
       cd wordle_directory
       git clone https://github.com/angelicalola-danhaive/Wordle.git
-   ```
+    ```
 If you chose to do this, make sure you have installed python3.9, git, pandas, and matplotlib.
 
 ## How to run
