@@ -27,14 +27,14 @@ import sys
 np.set_printoptions(threshold=sys.maxsize)
 
 
-def initialize(run_in_bash = False):
+def initialize(run_in_batch = False):
 	'''
-		Function that initiliazes the game, running everything until the first interaction with the user
+		Function that initializes the game, running everything until the first interaction with the user
 
 		Parameters
 		----------
-		run_in_bash
-			boolean, True if the user wants to run the code in bash looping over a list of words
+		run_in_batch
+			boolean, True if the user wants to run the code in batch looping over a list of words
 		Returns
 		----------
 		interactive
@@ -45,8 +45,8 @@ def initialize(run_in_bash = False):
 			scores given to each word based on letter frequencies (in words and in a particular place in the word)
 	'''
 
-	#directly set interactive to false so that the code can run without user inputs
-	if run_in_bash:
+	#if requested by user at the start, interactive is directly set interactive to false so that the code can run without user inputs
+	if run_in_batch:
 		interactive = False 
 	else:
 		answer = input('Welcome to the Wordle Solver, would you like to play interactively or ask me to solve for a word? Write INTERACT or SOLVE and press ENTER: ')
@@ -80,7 +80,7 @@ def pick_solution(words_list,interactive):
 		words_list
 			array, the list of all words accepted by Wordle
 		interactive
-			boolean, True if interactive, false if solving in bash
+			boolean, True if interactive, false if solving in batch
 
 		Returns
 		----------
@@ -91,7 +91,7 @@ def pick_solution(words_list,interactive):
 	if interactive:
 		solution = np.random.choice(words_list,size = None, replace = True)
 	else:
-		solution = input('Type in the 5 letter word you would like me to guess (I wont peek!!), then press ENTER: ')
+		solution = input('Type in the 5 letter word you would like me to guess (I wont peek!), then press ENTER: ')
 		solution = (words.verify(solution)).lower() #always lower strings to make sure there is no capitalization error
 	return solution
 
@@ -135,16 +135,22 @@ def guess_run(words_list, solution, scores,interactive):
 	#the words_list used is the intersection of the two resulting from the first two guesses
 	words_list = np.intersect1d(words_list_1,words_list_2,assume_unique=False)
 
+	if len(words_list) == 0:
+		print('Error: Something went wrong, the list of possible words is empty!')
+
 	#recompute the scores for the words in this new list
 	scores = proba.compute_all(words_list)
 
 	#loop over guesses until the right word is found
 	while not solution_found:
 		tries+= 1
-		guess, words_list, scores  = try_guess(solution, words_list, scores, interactive)
+		guess, new_words_list, new_scores  = try_guess(solution, words_list, scores, interactive)
 
 		if guess == solution:
 			solution_found = True
+
+		words_list = new_words_list
+		scores = new_scores
 	return tries
 
 
@@ -176,7 +182,7 @@ def try_guess(solution, words_list, scores, interactive, previous_guess = None):
 	'''
 
 	#generate the suggestion depending on the number of the guess
-	suggestion = generate_guess(words_list, scores, interactive, previous_guess)
+	suggestion = generate_guess(words_list, scores, previous_guess)
 
 	#obtain/generate the guess depending on the chosen mode. if interactive, the user is free to choose his own guess
 	if interactive:
@@ -189,14 +195,14 @@ def try_guess(solution, words_list, scores, interactive, previous_guess = None):
 		else:
 			guess = (words.verify(guess)).lower() 
 
-	#if run in bash, then the computer uses the suggestion as the guess and displays it to the user
+	#if run in batch, then the computer uses the suggestion as the guess and displays it to the user
 	else:
 		guess = suggestion
 		print('I am guessing the word {}. '.format(suggestion))
 
 	#exit the function directly if the guess matches the solution
 	if guess.lower() == solution:
-		return guess, None, None
+		return guess, guess, [1]
 	
 	#compute and display the response array of colors 
 	response = words.compare(guess, solution)
@@ -204,11 +210,15 @@ def try_guess(solution, words_list, scores, interactive, previous_guess = None):
 
 	# words_list is modified to only include possible words, and the scores array is recomputed for those words
 	words_list= words.sort(words_list, guess, response)
+
+	if len(words_list) == 0:
+		print('Error: Something went wrong, the list of possible words is empty!')
+
 	scores = proba.compute_all(words_list)
 
 	return guess, words_list, scores	
 
-def generate_guess(words_list, scores, interactive, previous_guess = None):
+def generate_guess(words_list, scores, previous_guess = None):
 	'''
 		Function to generate the next guess/suggestion
 
@@ -218,8 +228,6 @@ def generate_guess(words_list, scores, interactive, previous_guess = None):
 			the list of all words accepted by Wordle
 		scores
 			scores given to each word in the new list
-		interactive
-			True if interactive, false if solve
 		previous_guess
 			previous guess (needed for second guess) or None if any other guess
 

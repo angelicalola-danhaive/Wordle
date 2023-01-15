@@ -94,7 +94,7 @@ def sort(words_list,guess,response):
 			the updated list of possible words
 	"""
 
-	#initialzie all of the arrays that will be filled within the function
+	#initialize all of the arrays that will be filled within the function
 	new_list = []
 	new_frequencies = []
 

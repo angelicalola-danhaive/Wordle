@@ -18,7 +18,7 @@ if ask_user.lower() == 'run':
 	tries_total = []
 	words_list = words.load_list()
 
-	#initalize the game to bash automatically
+	#initalize the game to batch automatically
 	interactive, new_words_list, scores = game.initialize(True)
 
 	#make it solve for every word in the list
@@ -26,11 +26,12 @@ if ask_user.lower() == 'run':
 		solution = word
 		tries= game.guess_run(new_words_list, solution, scores,interactive)
 		tries_total.append(tries)
-		print('Just finished word number {}'.format(index) )
+		print('Just finished word number {}'.format(index+1) )
 
 	#to plot the results from the run of the list
 	import matplotlib.pyplot as plt
 	#number_tries will be the bins, and the height is given by how many time that number appears in the array of the number of tries for each word
+	tries_total = np.array(tries_total)
 	number_tries, height_tries = np.unique(tries_total, return_counts = True)
 	#compute and print the mean number of tries
 	mean = np.mean(tries_total)
@@ -45,7 +46,7 @@ else:
 	#---------------run just once-------------------------------------------------------------------------------------------------------------------
 
 
-	# initialize the game: ask if the payer wants to play interactively or in bash, load the wordlewords.txt file, compute all probabilities and store them somewhere
+	# initialize the game: ask if the payer wants to play interactively or in batch, load the wordlewords.txt file, compute all probabilities and store them somewhere
 
 	#load the list of words and their scores, and ask the user to set the interactive bool 
 	interactive, words_list, scores = game.initialize()

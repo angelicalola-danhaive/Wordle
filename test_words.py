@@ -31,8 +31,7 @@ def test_compare():
 	"""
 	Test for the compare function
 	"""
-	#checks that need to be done: letter is in the right spot, letter is in the wrong spot, double letter in guess one in solution, vice versa
-
+	#check with various placements of double letters
 	assert(words.compare('table','tower') == ['G', 'B', 'B', 'B', 'Y' ])
 	assert(words.compare('books','sport') == ['B', 'B', 'G', 'B', 'Y' ])
 	assert(words.compare('sport','books') == ['Y', 'B', 'G', 'B', 'B' ])
@@ -44,7 +43,6 @@ def test_sort():
 	"""
 	Test for the sort function
 	"""
-	#checks: general, all black, all green, all yellow word
 	#in all the checks we assume the right word is wagon (for the response array)
 	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'], 'weary', ['G','B','Y','B','B'])) == ['wasps', 'wagon']))
 	assert(np.all((words.sort(['above','wasps','zebra', 'wagon'] ,'plith', ['B','B','B','B','B'])) == ['above','zebra', 'wagon']))
@@ -57,8 +55,7 @@ def test_check_word():
 	"""
 	assert(words.check_word('aliuf',['a'],[0], ['i'] , [3] , ['g','a','n'] ) == True)
 	assert(words.check_word('sixes',['s', 'i', 'e' ,'s'],[0,1,3,4], [] , [] , ['s'] ) == True)
-	# assert(words.check_word(list('wasps'),list('wagon'),['G', 'Y', 'B', 'B','B'] ) == False)
-	# assert(words.check_word(list('sixes'),list('sises'),['G', 'G', 'B', 'G','G'] ) == True)
+	assert(words.check_word('ssxes',['s', 'e' ,'s'],[0,3,4], [] , [] , ['i','s'] ) == False)
 
 
 def test_count_difference():
@@ -66,13 +63,14 @@ def test_count_difference():
 	Test for the count_difference function
 	"""
 	assert(words.count_difference('wagon','wasps') == 3)
+	assert(words.count_difference('oxbow','tares') == 5)
 
 def test_verify():
 	"""
 	Test for the verify function
 	"""
 	assert(  words.verify('zebra') == 'zebra' )
-	#check that if the wrong word is put then it requests another
+	#check that if the wrong word is put then it requests another and saves it
 	with mock.patch('builtins.input', return_value="zebra"):
 		assert(  words.verify('ablar') == 'zebra' )
 

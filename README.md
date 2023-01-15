@@ -34,6 +34,7 @@ This code can be downloaded as a Docker project and hence be run on any machine.
  - the Dockerfile automatically clones this repository in your local directory, so you can now directly run your  `wordle_solver.py`. 
  
 Alternatively, you can clone this repository manually:
+
     ```bash
       cd wordle_directory
       git clone https://github.com/angelicalola-danhaive/Wordle.git
@@ -50,7 +51,7 @@ Running the code is simple.
  - First you will be asked if you want to simply run the code over all of the words in the list. This is useful to see how quickly the code can solve a Wordle on average. If yes, enter **'run'**, if not, simply press *ENTER* to be taken to the main version. If you press *ENTER* then:
     - you will be asked which version of the game you want to play, enter **'interact'** if you want to try to guess the computer-generated word, or **'solve'** if you want the computer to solve a word you input
     - In the latter case, the code will run by itself until the solution you entered is found
-    - If you are guessing, then the computer will suggest a guess, which you are free to use or type in any other 5-letter word to guess. You can type 'more' if you want to see the list of all possible words at this stage of the game.
+    - If you are guessing, then the computer will suggest a guess, which you are free to use or type in any other 5-letter word to guess. You can type **'more'** if you want to see the list of all possible words at this stage of the game.
 
 If you enter **'run'** then the code will loop over all of the words in WordleWords.txt and count how many guesses it takes to solve for each one. The results are plotted in a histogram at the end, the average number of tries is printed. 
 
