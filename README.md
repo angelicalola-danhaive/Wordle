@@ -47,11 +47,12 @@ Running the code is simple.
    ```bash
       python wordle_solver.py
    ```
- - First you will be asked if you want to simply run the code over all of the words in the list. This is useful to see how quickly the code can solve a Wordle on average. If yes, enter RUN, if not, simply press ENTER to be taken to the main version. If you press ENTER then:
-    - you will be asked which version of the game you want to play, enter 'interact' if you want to try to guess the computer-generated word, or 'solve' if you want the computer to solve a word you input
+ - First you will be asked if you want to simply run the code over all of the words in the list. This is useful to see how quickly the code can solve a Wordle on average. If yes, enter **'run'**, if not, simply press *ENTER* to be taken to the main version. If you press *ENTER* then:
+    - you will be asked which version of the game you want to play, enter **'interact'** if you want to try to guess the computer-generated word, or **'solve'** if you want the computer to solve a word you input
     - In the latter case, the code will run by itself until the solution you entered is found
     - If you are guessing, then the computer will suggest a guess, which you are free to use or type in any other 5-letter word to guess. You can type 'more' if you want to see the list of all possible words at this stage of the game.
-   
+
+If you enter **'run'** then the code will loop over all of the words in WordleWords.txt and count how many guesses it takes to solve for each one. The results are plotted in a histogram at the end, the average number of tries is printed. 
 
 ## Features
 
@@ -59,6 +60,7 @@ This code allows you to do the following things:
 
  - Solve for any 5-letter word in the WordleWords.txt 
  - Play Wordle yourself by choosing the interactive option
+ - Running the solver over all of the words in WordleWords.txt to compute the average amount of guesses it takes to solve a word
  
  In both cases, the code generates the best next guess by computing the frequencies of letters in all of the remaining words. It then picks as next guess the word with the most frequent letters. For the second guess, it also makes sure to pick a word with all different letters from the first.
 
