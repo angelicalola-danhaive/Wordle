@@ -96,7 +96,6 @@ def sort(words_list,guess,response):
 
 	#initialize all of the arrays that will be filled within the function
 	new_list = []
-	new_frequencies = []
 
 	green_letters = []
 	green_indices = []
