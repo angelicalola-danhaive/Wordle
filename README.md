@@ -35,7 +35,7 @@ This code can be downloaded as a Docker project and hence be run on any machine.
  
 Alternatively, you can clone this repository manually:
 
-    ```bash
+    ```
       cd wordle_directory
       git clone https://github.com/angelicalola-danhaive/Wordle.git
     ```
