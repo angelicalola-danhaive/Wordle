@@ -1,7 +1,17 @@
 """
-Full code to run to solve WORDLE yourself interactively or to give the program a word and get it to solve it
+This is a code to solve WORDLE.
+
+This code allows you to do the following:
+
+1. Solve for any 5-letter word in the WordleWords.txt, with the ENTER + 'solve' option
+2. Play Wordle yourself by choosing the interactive option, with the ENTER + 'interactive' option
+3. Run the solver over all of the words in WordleWords.txt to compute the average amount of guesses it takes to solve a word, with the 'run' option
+
+It generates guesses based on the frequencies of letters in order to optimize the information gotten from each guess.
+
 	Written by A L Danhaive: ald66@cam.ac.uk
 """
+
 #load all of the modules 
 import numpy as np
 import game
